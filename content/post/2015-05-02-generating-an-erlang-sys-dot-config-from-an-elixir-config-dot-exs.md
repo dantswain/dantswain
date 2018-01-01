@@ -4,7 +4,9 @@ date: "2015-05-02"
 comments: true
 aliases:
   - "blog/2015/05/02/generating-an-erlang-sys-dot-config-from-an-elixir-config-dot-exs/"
-categories: [erlang, elixir, deployment, chef]
+categories:
+  - "erlang"
+tags: [elixir, deployment, chef]
 ---
 
 This post describes Erlang's sys.config and the equivalent config.exs

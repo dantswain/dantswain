@@ -4,7 +4,9 @@ title: "New Blog Design"
 date: "2013-10-27"
 comments: true
 published: true
-categories: [meta, robots, design]
+categories:
+  - "meta"
+tags: [robots, design]
 ---
 
 I think a lot of developers have this intention of creating and

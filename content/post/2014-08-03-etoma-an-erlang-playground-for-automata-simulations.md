@@ -4,7 +4,9 @@ title: "etoma - An Erlang playground for automata simulations"
 date: "2014-08-03"
 comments: true
 published: false
-categories: [erlang, websockets]
+categories:
+  - "erlang"
+tags: [websockets]
 ---
 
 I've been playing around lately with a project in Erlang (and a little bit in
