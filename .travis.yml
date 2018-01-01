@@ -1,7 +1,7 @@
 language: go
 
 go:
-	- 1.7
+  - 1.7
 
 addons:
   apt:
@@ -11,7 +11,7 @@ addons:
 # Clean and don't fail
 install:
   - rm -rf public || exit 0
-	- go get -u -v github.com/spf13/hugo
+  - go get -u -v github.com/spf13/hugo
 
 # Build the website
 script:
