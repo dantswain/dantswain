@@ -17,7 +17,7 @@ HTTPoison below) to make requests.  The source code corresponding to
 this post is on my github at
 [https://github.com/dantswain/calculon](https://github.com/dantswain/calculon).
 
-#Introduction (plus a little discourse on testing)
+# Introduction (plus a little discourse on testing)
 
 I like integration-level testing, especially for web apps and doubly
 so for APIs.  A good integration test suite can help you work out

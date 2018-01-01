@@ -150,7 +150,7 @@ stop it.
 ```iex
 iex(1)> pid = spawn(&LoopCounter.go/0)
 n is 0
-#PID<0.55.0>
+# PID<0.55.0>
 n is 1
 n is 2
 n is 3
@@ -188,7 +188,7 @@ the pid of the caller so we can send back the state as a return message.
 iex(1)> c("signal_counter.ex")
 [SignalCounter]
 iex(2)> pid = spawn(&SignalCounter.go/0)
-#PID<0.61.0>
+# PID<0.61.0>
 iex(3)> send(pid, {:click, self})
 {:click, #PID<0.53.0>}
 iex(4)> receive do x -> x end
@@ -217,7 +217,7 @@ Erlang and Elixir idiom.
 iex(1)> c("counter.ex")
 [Counter]
 iex(2)> c = Counter.new
-#PID<0.62.0>
+# PID<0.62.0>
 iex(3)> Counter.click(c)
 1
 iex(4)> Counter.set(c, 42)
@@ -225,7 +225,7 @@ iex(4)> Counter.set(c, 42)
 iex(5)> Counter.get(c)
 42
 iex(6)> c2 = Counter.new
-#PID<0.67.0>
+# PID<0.67.0>
 iex(7)> Counter.get(c2)
 0
 ```
