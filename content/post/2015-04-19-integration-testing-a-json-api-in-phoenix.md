@@ -5,7 +5,8 @@ date: "2015-04-19"
 comments: true
 categories:
   - "elixir"
-tags: [phoenix]
+tags:
+  - "phoenix"
 ---
 
 # TL;DR

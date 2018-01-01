@@ -6,7 +6,8 @@ comments: true
 published: false
 categories:
   - "erlang"
-tags: [websockets]
+tags:
+  - "websockets"
 ---
 
 I've been playing around lately with a project in Erlang (and a little bit in

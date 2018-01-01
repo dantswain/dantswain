@@ -6,7 +6,9 @@ comments: true
 published: true
 categories:
   - "meta"
-tags: [robots, design]
+tags:
+  - "robots"
+  - "design"
 ---
 
 I think a lot of developers have this intention of creating and
