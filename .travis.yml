@@ -1,0 +1,26 @@
+language: go
+
+go:
+	- 1.7
+
+addons:
+  apt:
+    packages:
+      - python-pygments
+
+# Clean and don't fail
+install:
+  - rm -rf public || exit 0
+	- go get -u -v github.com/spf13/hugo
+
+# Build the website
+script:
+  - hugo
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  local_dir: public
+  on:
+    branch: master
