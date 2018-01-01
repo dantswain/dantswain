@@ -2,6 +2,8 @@ baseURL = "https://dantswain.com/"
 languageCode = "en-us"
 title = "Dan's Blog"
 
+pygmentsCodeFences = true
+
 theme = "casper"
 
 disqusshortname = "dantswainblog"
@@ -22,3 +24,5 @@ googleAnalyticsUserID = "UA-30160681-1"
 
 [permalinks]
 post = "/:year/:month/:day/:title/"
+
+

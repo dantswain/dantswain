@@ -1,5 +1,5 @@
 ---
-layout: post
+
 title: "New Blog Design"
 date: "2013-10-27"
 comments: true

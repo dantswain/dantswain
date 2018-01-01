@@ -1,5 +1,5 @@
 ---
-layout: post
+
 title: "Storing state in Elixir with processes"
 date: "2015-01-06"
 comments: true

@@ -1,5 +1,5 @@
 ---
-layout: post
+
 title: "etoma - An Erlang playground for automata simulations"
 date: "2014-08-03"
 comments: true

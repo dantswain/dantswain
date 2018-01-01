@@ -1,5 +1,5 @@
 ---
-layout: post
+
 title: "Integration Testing a JSON API in Phoenix"
 date: "2015-04-19"
 comments: true

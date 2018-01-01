@@ -1,5 +1,5 @@
 ---
-layout: post
+
 title: "Erlang: First element in a list that matches some condition"
 date: "2012-10-05"
 comments: true

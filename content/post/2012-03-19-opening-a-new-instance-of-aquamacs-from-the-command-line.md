@@ -1,5 +1,4 @@
 ---
-layout: post
 title: "Opening a new instance of Aquamacs from the command line"
 date: "2012-03-19"
 comments: true

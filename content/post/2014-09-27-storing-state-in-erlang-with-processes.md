@@ -1,5 +1,5 @@
 ---
-layout: post
+
 title: "Storing state in Erlang with processes"
 date: "2014-09-27"
 comments: true

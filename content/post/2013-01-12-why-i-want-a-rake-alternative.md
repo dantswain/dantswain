@@ -1,5 +1,5 @@
 ---
-layout: post
+
 title: "Why I Want a New Rake Alternative"
 date: "2013-01-12"
 comments: true

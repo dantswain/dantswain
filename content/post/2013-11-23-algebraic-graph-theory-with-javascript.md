@@ -1,5 +1,5 @@
 ---
-layout: post
+
 title: "Algebraic Graph Theory with JavaScript"
 date: "2013-11-23"
 comments: true
