@@ -1,3 +1,24 @@
-baseURL = "http://example.org/"
+baseURL = "https://dantswain.com/"
 languageCode = "en-us"
-title = "My New Hugo Site"
+title = "Dan's Blog"
+
+theme = "casper"
+
+disqusshortname = "dantswainblog"
+
+[params]
+author = "Dan Swain"
+authorlocation = "Rochester, NY"
+authorwebsite = "https://dantswain.com"
+
+authorbio = "Fellow at simpli.fi. Robotics Ph.D. I like building things. "
+
+cover = "images/flockBack.png"
+
+githubName = "dantswain"
+twitterName = "dantswain"
+
+googleAnalyticsUserID = "UA-30160681-1"
+
+[permalinks]
+post = "/:year/:month/:day/:title/"
