@@ -5,10 +5,18 @@ title = "Dan's Blog"
 pygmentsCodeFences = true
 
 theme = "casper"
+GoogleAnalytics = "UA-30160681-1"
 
 disqusshortname = "dantswainblog"
 
+[author]
+  name = "Dan Swain"
+
 [params]
+blogHeader = "<span style=\"font-size: 36px; \">Dan's Blog</span>"
+tagline = "something witty"
+headerimg = "flockBack.png"
+
 author = "Dan Swain"
 authorlocation = "Rochester, NY"
 authorwebsite = "https://dantswain.com"
