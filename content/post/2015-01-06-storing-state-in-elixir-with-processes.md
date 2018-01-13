@@ -110,7 +110,18 @@ recursion by passing state from the intial function call to the next and
 so on.  Here is an example of a counter in Elixir that prints out the value
 as it increments with each recursive function call.
 
-{% include_code Recursive counter elixir_state/loop_counter.ex %}
+```elixir
+defmodule LoopCounter do
+  def go, do: go(0)
+
+  defp go(n) do
+    IO.puts("n is #{n}")
+    # just to make sure this doesn't blow up our terminal
+    :timer.sleep(1000)
+    go(n + 1)
+  end
+end
+```
 
 Running this code from the iex shell will take over the shell
 because the function `LoopCounter.go` never returns.  You can
@@ -178,7 +189,21 @@ the click message to increment the counter's value
 and send the updated value back to the calling process
 as a return message.
 
-{% include_code Simple signal-based counter elixir_state/signal_counter.ex %}
+```elixir
+defmodule SignalCounter do
+  def go do
+    loop(0)
+  end
+
+  defp loop(n) do
+    receive do
+      {:click, from} ->
+        send(from, n + 1)
+        loop(n + 1)
+    end
+  end
+end
+```
 
 We can create a counter using spawn and send messages to it. The counter
 expects messages to be tuples: `{:click, from}`  where `from` should be
@@ -205,7 +230,44 @@ message handling in the module and providing a simple API to the outside
 world.  Here's a modified counter that does this, as well as adding
 a few new messages.
 
-{% include_code Signal-based counter with API layer elixir_state/counter.ex %}
+```elixir
+defmodule Counter do
+  # API methods
+  def new do
+    spawn fn -> loop(0) end
+  end
+
+  def set(pid, value) do
+    send(pid, {:set, value, self()})
+    receive do x -> x end
+  end
+
+  def click(pid) do
+    send(pid, {:click, self()})
+    receive do x -> x end
+  end
+
+  def get(pid) do
+    send(pid, {:get, self()})
+    receive do x -> x end
+  end
+
+  # Counter implementation
+  defp loop(n) do
+    receive do
+      {:click, from} ->
+        send(from, n + 1)
+        loop(n + 1)
+      {:get, from} ->
+        send(from, n)
+        loop(n)
+      {:set, value, from} ->
+        send(from, :ok)
+        loop(value)
+    end
+  end
+end
+```
 
 This makes the API much more intuitive by adding methods like `Counter.click/0`.
 Note that `Counter.new/0` returns the pid of the underlying process and that
@@ -246,7 +308,48 @@ implementataion of the counter logic is interspersed with lower-level message
 handling.  You're a good programmer and this rubs you the wrong way.
 So let's refactor the code to share some of the common bits and clean it up quite a lot.
 
-{% include_code Refactored counter elixir_state/gen_counter.ex %}
+```elixir
+defmodule GenCounter do
+  # API
+  def new do
+    spawn(fn -> loop(0) end)
+  end
+
+  def click(pid) do
+    make_call(pid, :click)
+  end
+
+  def get(pid) do
+    make_call(pid, :get)
+  end
+
+  def set(pid, new_value) do
+    make_call(pid, {:set, new_value})
+  end
+
+  # message handlers
+  # handle_msg(message, current_state) -> {reply, new_state}
+  defp handle_msg(:click, n), do: {n + 1, n + 1}
+  defp handle_msg(:get, n), do: {n, n}
+  defp handle_msg({:set, new_value}, _n), do: {:ok, new_value}
+
+  # main state loop
+  defp loop(state) do
+    receive do
+      {from, msg} ->
+        {reply, new_state} = handle_msg(msg, state)
+        send(from, reply)
+        loop(new_state)
+    end
+  end
+
+  # call helper
+  defp make_call(pid, msg) do
+    send(pid, {self(), msg})
+    receive do x -> x end
+  end
+end
+```
 
 This code has the same functionality as before, but is factored
 to avoid repeated code and to hopefully group together the important bits of
@@ -283,7 +386,48 @@ instead of `Kernel.spawn/1`,
 our `make_call/2` helper, and implement `init` and `handle_call` callbacks to define
 our logic.
 
-{% include_code GenServer-based counter elixir_state/counter_server.ex %}
+```elixir
+defmodule CounterServer do
+  use GenServer
+
+  # API
+  def new do
+    GenServer.start_link(__MODULE__, 0)
+  end
+
+  def click(pid) do
+    GenServer.call(pid, :click)
+  end
+
+  def set(pid, new_value) do
+    GenServer.call(pid, {:set, new_value})
+  end
+
+  def get(pid) do
+    GenServer.call(pid, :get)
+  end
+
+  # GenServer callbacks
+
+  # init(arguments) -> {:ok, state}
+  # see http://elixir-lang.org/docs/v1.0/elixir/GenServer.html
+  def init(n) do
+    {:ok, n}
+  end
+
+  # handle_call(message, from_pid, state) -> {:reply, response, new_state}
+  # see http://elixir-lang.org/docs/v1.0/elixir/GenServer.html
+  def handle_call(:click, _from, n) do
+    {:reply, n + 1, n + 1}
+  end
+  def handle_call(:get, _from, n) do
+    {:reply, n, n}
+  end
+  def handle_call({:set, new_value}, _from, _n) do
+    {:reply, :ok, new_value}
+  end
+end
+```
 
 By using GenServer, we get a ton of functionality for free.  For example,
 `GenServer.call/3` takes an optional timeout argument which we can use to
@@ -304,7 +448,25 @@ for just that use case.
 
 Here is how we could rewrite our counter using the Agent module.
 
-{% include_code Agent-based counter elixir_state/counter_agent.ex %}
+```elixir
+defmodule CounterAgent do
+  def new do
+    Agent.start_link(fn -> 0 end)
+  end
+
+  def click(pid) do
+    Agent.get_and_update(pid, fn(n) -> {n + 1, n + 1} end)
+  end
+
+  def set(pid, new_value) do
+    Agent.update(pid, fn(_n) -> new_value end)
+  end
+
+  def get(pid) do
+    Agent.get(pid, fn(n) -> n end)
+  end
+end
+```
 
 This reduces our Counter to just four named functions.  Much of the work
 is done by anonymous functions that we supply to the various

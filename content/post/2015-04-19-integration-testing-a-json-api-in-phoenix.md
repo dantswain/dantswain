@@ -167,7 +167,47 @@ Now let's add a helper module to make API calls, making heavy use of
 HTTPoison's `HTTPoison.Base` macro and the callbacks that it
 provides to shape requests and responses.
 
-{% include_code HTTP Helper phoenix_integration_testing/api_call.ex %}
+```elixir
+# lib/calculon/support/api_call.ex
+defmodule Calculon.Support.APICall do
+  use HTTPoison.Base
+
+  # prepend the url with the server api route
+  def process_url(url) do
+    api_url <> url
+  end
+
+  # try to decode response bodies as JSON
+  #   but reply with the raw body if there are
+  #   any errors (e.g., invalid JSON)
+  def process_response_body(body) do
+    try do
+      Poison.decode!(body, keys: :atoms!)
+    rescue
+      _ -> body
+    end
+  end
+
+  # always convert the request body to JSON
+  def process_request_body(body) do
+    Poison.encode!(body)
+  end
+
+  # make sure we're posting JSON
+  def process_request_headers(headers) do
+    [{'content-type', 'application/json'} | headers]
+  end
+
+  # API url helper - will work in any env
+  defp api_url do
+    endpoint_config = Application.get_env(:calculon, Calculon.Endpoint)
+    host = Keyword.get(endpoint_config, :url) |> Keyword.get(:host)
+    port = Keyword.get(endpoint_config, :http) |> Keyword.get(:port)
+
+    "http://#{host}:#{port}/api/v1"
+  end
+end
+```
 
 Now we can launch our app (`mix phoenix.server`) and in another
 terminal do things like this:
@@ -200,13 +240,47 @@ Let's add a test helper to launch the API when we need it.  We'll put
 this code in the `test/support` directory because we don't really need
 it outside of our test code.
 
-{% include_code API Helper phoenix_integration_testing/helpers.ex %}
+```elixir
+# test/support/helpers.ex
+defmodule Calculon.Support.Helpers do
+  def launch_api do
+    # set up config for serving
+    endpoint_config =
+      Application.get_env(:calculon, Calculon.Endpoint)
+      |> Keyword.put(:server, true)
+    :ok = Application.put_env(:calculon, Calculon.Endpoint, endpoint_config)
+
+    # restart our application with serving enabled
+    :ok = Application.stop(:calculon)
+    :ok = Application.start(:calculon)
+  end
+end
+```
 
 # Writing integration tests
 
 We have all of the pieces now.  Let's write a test.
 
-{% include_code Simple integration test phoenix_integration_testing/calculations_integration_test.exs %}
+```elixir
+# test/integration/calculations_integration_test.exs
+defmodule CalculationsIntegrationTest do
+  use ExUnit.Case
+
+  # alias for convenience
+  alias Calculon.Support.APICall
+
+  # use the setup_all hook to make sure the API is
+  # serving content during tests
+  setup_all do
+    Calculon.Support.Helpers.launch_api
+  end
+
+  test "POST /api/v1/calculations returns HTTP 201" do
+    response = APICall.post!("/calculations", %{calculation: %{input: "1 + 1"}})
+    assert response.status_code == 201
+  end
+end
+```
 
 We use the `setup_all`
 [ExUnit callback](http://elixir-lang.org/docs/v1.0/ex_unit/ExUnit.Callbacks.html)
@@ -231,7 +305,36 @@ Now let's add some actual calculator functionality to Calculon using
 TDD.  We'll update our previous integration test to test for simple
 addition. 
 
-{% include_code Updated integration test phoenix_integration_testing/updated_calculations_integration_test.exs %}
+```elixir
+# test/integration/calculations_integration_test.exs
+defmodule CalculationsIntegrationTest do
+  use ExUnit.Case
+
+  # alias for convenience
+  alias Calculon.Support.APICall
+
+  # use the setup_all hook to make sure the API is
+  # serving content during tests
+  setup_all do
+    Calculon.Support.Helpers.launch_api
+  end
+
+  test "POST /api/v1/calculations returns HTTP 201" do
+    response = APICall.post!("/calculations", %{calculation: %{input: "1 + 1"}})
+    assert response.status_code == 201
+  end
+
+  test "simple addition" do
+    request = %{calculation: %{input: "1 + 1"}}
+    response = APICall.post!("/calculations", request)
+
+    expected_response = %{calculation: %{input: "1 + 1", output: "2"}}
+    
+    assert response.status_code == 201
+    assert response.body == expected_response
+  end
+end
+```
 
 This test should fail because we haven't built the
 corresponding functionality yet.
@@ -304,7 +407,29 @@ like to let an API consumer know that they are providing invalid
 input, so let's refactor the controller to return a 400 error if the
 calculator returns `nil`.
 
-{% include_code Controller with some error handling phoenix_integration_testing/calculations_controller.ex %}
+```elixir
+# web/controllers/calculations_controller.ex
+defmodule Calculon.CalculationsController do
+  use Phoenix.Controller
+
+  plug :action
+
+  def create(conn, params) do
+    input = params["calculation"]["input"]
+    output = Calculon.Calculator.eval(input)
+
+    if output do
+      conn
+      |> put_status(201)
+      |> json %{calculation: %{input: input, output: "#{output}"}}
+    else
+      conn
+      |> put_status(400)
+      |> json %{error: %{input: ["unable to parse"]}}
+    end
+  end
+end
+```
 
 Now our tests pass again:
 
@@ -356,4 +481,29 @@ operations.  This is also might not be a great solution for a
 production app because the parsing and validation might be relatively
 heavy on the CPU.
 
-{% include_code Simplistic AST arithmetic parser phoenix_integration_testing/calculator.ex %}
+```elixir
+defmodule Calculon.Calculator do
+  def eval(string) do
+    ast = Code.string_to_quoted!(string)
+    if is_simple_arithmetic?(ast) do
+      {result, []} = Code.eval_quoted(ast)
+      result
+    else
+      nil
+    end
+  end
+
+  def is_simple_arithmetic?({op, _, args}) do
+    Enum.member?([:+, :-, :*, :/], op) && bare_args?(args) 
+  end
+  def is_simple_arithmetic?(_) do
+  end
+
+  def bare_args?([arg1, arg2]) when is_number(arg1) and is_number(arg2) do
+    true
+  end
+  def bare_args?(_) do
+    false
+  end
+end
+```
