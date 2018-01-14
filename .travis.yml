@@ -20,8 +20,10 @@ script:
 
 deploy:
   provider: pages
+  target-branch: master
   skip_cleanup: true
   github_token: $GITHUB_TOKEN
   local_dir: public
+  verbose: true
   on:
     branch: master
