@@ -744,49 +744,6 @@ body.nav-opened .nav-cover {
     width: auto;
 }
 
-.menu-button {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    display: inline-block;
-    float: right;
-    height: 38px;
-    padding: 0 15px;
-    border: #bfc8cd 1px solid;
-    opacity: 1;
-    color: #9EABB3;
-    text-align: center;
-    font-size: 12px;
-    text-transform: uppercase;
-    line-height: 35px;
-    white-space: nowrap;
-    border-radius: 3px;
-    background: rgba(0,0,0,0.1);
-    transition: all 0.5s ease;
-}
-.menu-button:focus {
-    outline: 0;
-}
-.menu-button .burger {
-    font-size: 12px;
-    margin-right: 6px;
-}
-
-body.nav-opened .menu-button {
-    padding: 0 12px;
-    background: #111 !important;
-    border-color: #111 !important;
-    color: #fff !important;
-    -webkit-transform: translate3D(94px, 0, 0);
-        -ms-transform: translate3D(94px, 0, 0);
-            transform: translate3D(94px, 0, 0);
-    transition: all 0.3s ease;
-}
-body.nav-opened .menu-button .word {
-    opacity: 0;
-    transition: all 0.3s ease;
-}
-
 /* Special styles when overlaid on an image*/
 .main-nav.overlay {
     position: absolute;
@@ -798,16 +755,9 @@ body.nav-opened .menu-button .word {
     background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%,rgba(0,0,0,0) 100%);
 }
 .no-cover .main-nav.overlay,
-.no-cover .menu-button {
-    background: none;
-}
 
 .main-nav.overlay a {
     color: #fff;
-}
-
-.main-nav.overlay .menu-button {
-    border-color: rgba(255,255,255,0.6);
 }
 
 .main-nav.overlay a:hover {
@@ -816,11 +766,6 @@ body.nav-opened .menu-button .word {
     background: #fff;
 }
 
-/* Add a border to the buttons on hover */
-.menu-button:hover {
-    border-color: #555;
-    color: #555;
-}
 
 /* The details of your blog. Defined in ghost/settings/ */
 .page-title {
@@ -869,11 +814,6 @@ body.nav-opened .menu-button .word {
 
 .no-cover .page-description {
     color: rgba(0,0,0,0.5);
-}
-
-.no-cover .main-nav.overlay .menu-button {
-    color: rgba(0,0,0,0.4);
-    border-color: rgba(0,0,0,0.3);
 }
 
 /* Add subtle load-in animation for content on the home page */
@@ -1586,23 +1526,6 @@ body:not(.post-template) .post-title {
         height: 30px;
     }
 
-    .menu-button {
-        padding: 0 5px;
-        border-radius: 0;
-        border-color: transparent;
-        color: #2e2e2e;
-        background: transparent;
-    }
-    .menu-button:hover {
-        color: #2e2e2e;
-        border-color: transparent;
-        background: none;
-    }
-    body.nav-opened .menu-button {
-        background: none !important;
-        border: transparent !important;
-    }
-
     .main-nav.overlay a:hover {
         color: #fff;
         border-color: transparent;
@@ -1611,13 +1534,6 @@ body:not(.post-template) .post-title {
 
     .no-cover .main-nav.overlay {
         background: none;
-    }
-    .no-cover .main-nav.overlay .menu-button {
-        border: none;
-    }
-
-    .main-nav.overlay .menu-button {
-        border-color: transparent;
     }
 
     .nav-title {
