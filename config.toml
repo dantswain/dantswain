@@ -36,7 +36,7 @@ post = "/:year/:month/:day/:title/"
 
 
 [[menu.main]]
-  name = "My Blog"
+  name = "Home"
   weight = -120
   identifier = "blog"
   url = "/"
