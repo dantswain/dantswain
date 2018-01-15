@@ -744,16 +744,6 @@ body.nav-opened .nav-cover {
     width: auto;
 }
 
-/* Special styles when overlaid on an image*/
-.main-nav.overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 70px;
-    border: none;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%,rgba(0,0,0,0) 100%);
-}
 .no-cover .main-nav.overlay,
 
 .main-nav.overlay a {
