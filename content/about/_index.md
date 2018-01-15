@@ -1,7 +1,7 @@
 ---
 title: "About Me"
 date: 2018-01-13T20:29:51-05:00
-draft: true
+draft: false
 ---
 
 Hi, I'm Dan.
