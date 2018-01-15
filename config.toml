@@ -9,8 +9,6 @@ GoogleAnalytics = "UA-30160681-1"
 
 disqusshortname = "dantswainblog"
 
-publishDir = "docs"
-
 [author]
 name = "Dan Swain"
 

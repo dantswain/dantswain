@@ -20,10 +20,11 @@ script:
 
 deploy:
   provider: pages
-  target-branch: master
   skip_cleanup: true
   github_token: $GITHUB_TOKEN
   local_dir: public
+  target_branch: master
+  repo: dantswain.github.io
   verbose: true
   on:
     branch: master
