@@ -15,6 +15,7 @@ install:
 
 # Build the website
 script:
+  - hugo version
   - hugo
 
 deploy:
