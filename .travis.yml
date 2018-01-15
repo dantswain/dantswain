@@ -24,7 +24,7 @@ deploy:
   github_token: $GITHUB_TOKEN
   local_dir: public
   target_branch: master
-  repo: dantswain.github.io
+  repo: dantswain/dantswain.github.io
   verbose: true
   on:
     branch: master
