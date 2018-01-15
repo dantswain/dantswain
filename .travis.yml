@@ -16,6 +16,8 @@ install:
 
 # Build the website
 script:
+  - git submodule status
+  - (cd themes/dtscasper && git rev-parse HEAD)
   - hugo
 
 deploy:
