@@ -1,51 +1,38 @@
 {{ partial "header.html" . }}
 
-{{if .Params.cover}}
-  {{if or (eq (substr .Params.cover 0 7) "http://") (eq (substr .Params.cover 0 8) "https://")}}
-	<header class="main-header tag-head" style="background-image: url({{.Params.cover}})">
+{{if .Site.Params.cover}}
+{{if or (eq (substr .Site.Params.cover 0 7) "http://") (eq (substr .Site.Params.cover 0 8) "https://")}}
+  <header class="main-header" style="background-image: url({{.Site.Params.cover}})">
   {{ else }}
-  <header class="main-header tag-head" style="background-image: url({{.Params.cover | relURL}})">
-  {{ end }}
-{{else if .Site.Params.cover}}
-	{{if or (eq (substr .Site.Params.cover 0 7) "http://") (eq (substr .Site.Params.cover 0 8) "https://")}}
-  <header class="main-header tag-head" style="background-image: url({{.Site.Params.cover}})">
-  {{ else }}
-  <header class="main-header tag-head" style="background-image: url({{.Site.Params.cover | relURL}})">
+  <header class="main-header" style="background-image: url({{.Site.Params.cover | relURL}})">
   {{ end }}
 {{else}}
-	<header class="main-header tag-head no-cover">
+<header class="main-header no-cover">
 {{end}}
+
+    {{ if .Site.Params.noburger }}
+    {{ else }}
     <nav class="main-nav overlay clearfix">
-      {{ if .Site.Params.logo }}
-        <a class="blog-logo" href="{{.Site.BaseURL}}"><img src="{{ .Site.Params.logo | relURL }}" alt="Home" /></a>
-      {{end}}
+        {{ if .Site.Params.logo }}
+            <a class="blog-logo" href="{{ .Permalink }}"><img src="{{ .Site.Params.logo  | relURL}}" alt="Blog Logo" /></a>
+        {{end}}
     </nav>
+    {{ end }}
     <div class="vertical">
         <div class="main-header-content inner">
-            <h1 class="page-title">{{.Title}}</h1>
-            <h2 class="page-description">
-                {{if .Params.description}}
-                    {{.Params.description}}
-                {{end}}
-            </h2>
+            {{ partial "social.html" . }}
+            <h1 class="page-title">{{ .Site.Title }}</h1>
+            <h2 class="page-about"><a href="{{ .Site.BaseURL }}about">About</a></h2>
         </div>
     </div>
+    <a class="scroll-down icon-arrow-left" href="#content"><span class="hidden">Scroll Down</span></a>
 </header>
 
-<main class="content" role="main">
-    {{ $paginator := .Paginator }}
 
-	<div class="extra-pagination inner">
-    {{ partial "pagination.html" $paginator }}
-	</div>
+<main id="content" class="content" role="main">
 
-	{{ range $index, $page := $paginator.Pages }}
-	   {{ partial "li.html" . }}
-	{{ end }}
+{{ partial "home-content.html" . }}
 
-	{{ partial "pagination.html" $paginator }}
 </main>
-
-
 
 {{ partial "footer.html" . }}
