@@ -1,0 +1,13 @@
+{{ if not .IsHome }}
+      <ul class="nav">
+        {{ $currentNode := . }}
+        {{with .Site.Menus.main}}
+        {{ range sort . "Weight" "desc"}}
+          {{.Pre}}
+            <li class="nav-item">
+              <a href="{{.URL}}">{{.Name}}</a>
+            </li>
+        {{end}}
+        {{end}}
+      </ul>
+{{ end }}
