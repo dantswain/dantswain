@@ -20,7 +20,7 @@ deploy:
   skip_cleanup: true
   github_token: $GITHUB_TOKEN
   local_dir: public
-  fqdn: dantswain.com
+  fqdn: www.dantswain.com
   target_branch: master
   repo: dantswain/dantswain.github.io
   verbose: true
