@@ -8,6 +8,8 @@ GoogleAnalytics = "UA-30160681-1"
 
 disqusshortname = "dantswainblog"
 
+disableKinds = ["taxonomy", "taxonomyTerm"]
+
 [author]
 name = "Dan Swain"
 
